@@ -17,7 +17,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { symbol } = req.query;
 
   try {
-    await mongoose.connect('mongodb+srv://mpskumar075:ihPt0BS1HN8qJ67C@cluster0.led7apr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
+    await mongoose.connect(process.env.MONGODB_URI!);
+    const isConnected = mongoose.connection.readyState === 1;
+
+    if (isConnected) {
+        console.log('MongoDB is not connected');
+      
+      }
+
+    if (!isConnected) {
+      console.log('MongoDB is not connected');
+    }
 
     const data = await Stock.find({ symbol })
       .sort({ timestamp: -1 })

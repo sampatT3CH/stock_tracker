@@ -17,9 +17,20 @@ const Stock = mongoose.models.Stock || mongoose.model('Stock', StockSchema);
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const symbols = ['GOOG', 'IBM', 'BTC', 'ETH', 'AAPL'];
-
+  
   try {
-    await mongoose.connect('mongodb+srv://mpskumar075:ihPt0BS1HN8qJ67C@cluster0.led7apr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
+    await mongoose.connect(process.env.MONGODB_URI!);
+
+    const isConnected = mongoose.connection.readyState === 1;
+
+    if (isConnected) {
+        console.log('MongoDB is not connected');
+      
+      }
+
+    if (!isConnected) {
+      console.log('MongoDB is not connected');
+    }
 
     for (const symbol of symbols) {
       const response = await axios.get(`https://www.alphavantage.co/query`, {
